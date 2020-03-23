@@ -1,15 +1,33 @@
 module App
 
-open Browser.Dom
+type Model = int
 
-// Mutable variable to count the number of times we clicked the button
-let mutable count = 0
+type Msg = Increment | Decrement
 
-// Get a reference to our button and cast the Element to an HTMLButtonElement
-let myButton = document.querySelector(".my-button") :?> Browser.Types.HTMLButtonElement
 
-// Register our listener
-myButton.onclick <- fun _ ->
-    count <- count + 1
-    myButton.innerText <- sprintf "You clicked: %i time(s)" count
+open Elmish
 
+let init () =
+  0
+
+let update (msg:Msg) count =
+  match msg with
+  | Increment -> count + 1
+  | Decrement -> count - 1
+
+open Fable.React
+open Fable.React.Props
+
+
+let view model dispatch =
+  div []
+      [ button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
+        div [] [ str (sprintf "%A" model) ]
+        button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ] ]
+
+open Elmish.React
+
+Program.mkSimple init update view
+|> Program.withReactBatched "elmish-app"
+|> Program.withConsoleTrace
+|> Program.run

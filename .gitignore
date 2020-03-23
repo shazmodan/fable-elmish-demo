@@ -1,3 +1,4 @@
+.ionide/
 temp/**
 
 ## Ignore Visual Studio temporary files, build results, and
