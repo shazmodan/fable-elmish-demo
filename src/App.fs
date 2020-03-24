@@ -20,7 +20,7 @@ type Model =
     | Success of AgeGroup list
 
 type Msg =
-    | LoadAgeGroup
+    | LoadAllData
     | LoadedAgeGroups of Result<AgeGroup list, string>
     | LoadedBirthAges of Result<BirthAge list, string>
 
@@ -44,13 +44,19 @@ let fetchDataByBirthAge =
         | _ -> return LoadedBirthAges(Error responseText)
     }
 
+let fetchAllData =
+    Cmd.batch [
+        Cmd.OfAsync.result fetchDataByAgeGroup
+        Cmd.OfAsync.result fetchDataByBirthAge
+    ]
+
 //TODO: Cmd batch and interop with JavaScript
 let init() = 
-    Loading, Cmd.ofMsg LoadAgeGroup
+    Loading, Cmd.ofMsg LoadAllData
 
 let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     match msg with
-    | LoadAgeGroup -> (Loading, Cmd.OfAsync.result fetchDataByAgeGroup)
+    | LoadAllData -> (Loading, fetchAllData)
 
     | LoadedAgeGroups result ->
         match result with
