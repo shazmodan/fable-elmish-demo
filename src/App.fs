@@ -133,5 +133,5 @@ let view (model: Model) (dispatch: Dispatch<Msg>) =
 
 Program.mkProgram init update view
 |> Program.withReactBatched "elmish-app"
-|> Program.withConsoleTrace
+//|> Program.withConsoleTrace
 |> Program.run
